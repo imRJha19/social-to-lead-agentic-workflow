@@ -3,43 +3,45 @@
 ## Introduction
 
 This project was developed as part of a **technical internship assignment for ServiceHive**.  
-The main objective of this project is to understand how a **conversational AI agent** can analyze chat conversations and convert interested users into qualified leads.
+The objective of this project is to build a **real-world GenAI agent** that can convert normal chat conversations into **qualified business leads**.
 
-The agent is built for a fictional SaaS product called **AutoStream**, an automated video editing platform for content creators.  
-Instead of focusing on UI or deployment, this project focuses on **agent behavior, intent handling, and safe backend execution**.
+The agent is designed for a fictional SaaS product called **AutoStream**, an automated video editing platform for content creators.  
+Instead of building a simple chatbot, the focus of this project is on **intent detection, stateful conversation flow, RAG-based answers, and safe backend tool execution**.
 
 ---
 
 ## Project Objective
 
-The agent is designed to:
-- Answer basic product and pricing questions
-- Identify users who show strong interest
-- Collect lead information in a structured, step-by-step manner
-- Trigger backend actions only when all required details are available
+The agent is built to:
+- Answer product and pricing-related questions accurately
+- Detect when a user shows high intent to sign up
+- Collect lead details in a structured, step-by-step manner
+- Trigger backend actions only after all required data is collected
 
 ---
 
 ## Key Features
 
-- Intent detection (greeting, product inquiry, high interest)
-- RAG-based answers using a local knowledge source
-- Multi-turn conversation memory
+- Intent classification (greeting, pricing inquiry, high-intent lead)
+- RAG-based responses using a local knowledge base
+- Stateful multi-turn conversation handling
 - Lead qualification flow (Name → Email → Platform)
-- Safe tool execution after data validation
-- Simple CLI-based interaction
+- Guarded backend tool execution
+- Command-line (CLI) interface for clarity
 
 ---
 
 ## Technologies Used
 
-- **Python** – primary programming language
-- **LangGraph** – for managing agent workflow and state
-- **LLM API (Gemini/OpenAI compatible)** – for natural language responses
-- **RAG** – retrieval from a local Markdown knowledge file
-- **CLI (Terminal)** – used for interaction and evaluation
+- **Python 3.9+**
+- **LangGraph** for agent workflow and state management
+- **LLM API (Gemini / OpenAI compatible)**
+- **RAG** using a local Markdown knowledge file
+- **CLI (Terminal)** for interaction
 
 ---
+
+## Project Structure
 
 social-to-lead-agentic-workflow/
 - ├── main.py
@@ -49,14 +51,13 @@ social-to-lead-agentic-workflow/
 - ├── lead.py
 - ├── state.py
 - ├── tools.py
+- ├── requirements.txt
 - └── README.md
-
-
 
 
 ---
 
-## How to Run the Project
+## How to Run the Project Locally
 
 ### Prerequisites
 - Python 3.9 or higher
@@ -68,43 +69,50 @@ social-to-lead-agentic-workflow/
 ```bash
 git clone https://github.com/imRJha19/social-to-lead-agentic-workflow.git
 cd social-to-lead-agentic-workflow
+
+pip install -r requirements.txt
+
+GEMINI_API_KEY=your_api_key_here
+
+python main.py
+
+```
+The agent will start in the terminal.
+Type exit to stop the program.
+
 User: tell me pricing
 Agent: AutoStream offers two plans...
 
-User: i want to try pro
-Agent: Great! What's your name?
+User: i want to try pro.
+Agent: Great! What's your name?.
 
-User: Adarsh
-Agent: Thanks! What's your email address?
+User: Adarsh.
+Agent: Thanks! What's your email address?.
 
-User: adarsh@gmail.com
-Agent: Which platform do you create content on?
+User: adarsh@gmail.com.
+Agent: Which platform do you create content on?.
 
-User: YouTube
+User: YouTube.
 Agent: You're all set! Our team will reach out to you shortly.
-```
 
-## Architecture Overview
+## Architecture Explanation
 
-The agent is implemented using LangGraph, which allows the conversation to be modeled as a state-based workflow.
-A central state object stores user intent, conversation history, and lead details.
+This project uses LangGraph to implement a state-driven conversational AI agent.
+LangGraph was chosen because it allows the agent workflow to be modeled as a graph of deterministic steps, which is closer to how real production agents are built. Instead of relying on a single prompt, each stage of the conversation (intent detection, RAG answering, lead qualification) is handled as a separate node.
 
-Each message is first analyzed to detect intent.
-If the user asks about pricing or product details, the agent retrieves relevant information from a local knowledge file using a RAG approach.
-When high intent is detected, the agent enters a lead qualification flow and collects user details step-by-step.
+A centralized agent state is maintained across the conversation. This state stores information such as the detected intent, user-provided details (name, email, platform), and conversation progress. Because the state persists across turns, the agent can correctly handle multi-step conversations spanning 5–6 messages or more.
 
-The backend tool is executed only after all required details are collected, ensuring controlled and safe behavior.
+When a user asks about pricing or features, the agent uses a Retrieval-Augmented Generation (RAG) approach. Relevant information is retrieved from a local knowledge file and passed to the LLM to ensure accurate and grounded responses. When high intent is detected, the agent transitions into a lead qualification flow and collects details step-by-step. The backend tool is executed only after all required details are present, ensuring safe and controlled behavior.
 
-## WhatsApp Integration (Concept)
+## WhatsApp Deployment (Conceptual)
 
-In a production environment, this agent can be integrated with WhatsApp using a webhook-based backend.
-Incoming messages can be forwarded to the agent, and conversation state can be stored using a database or Redis.
+In a production setup, this agent can be integrated with WhatsApp using a webhook-based architecture. Incoming WhatsApp messages (via providers like Twilio or WhatsApp Cloud API) would be received by a backend server (e.g., FastAPI). Each message would be associated with a session ID (such as the user’s phone number) and forwarded to the agent.
 
-This project does not implement WhatsApp integration but explains how it can be done conceptually.
+The agent’s state can be stored in a database or Redis to preserve conversation memory across messages. The agent’s response would then be sent back to the user via the WhatsApp API. This allows the same agent logic to work across multiple channels while maintaining consistent lead qualification behavior.
 
 ## Notes
 
-The project is intentionally CLI-based for clarity
+The project is intentionally CLI-based for evaluation clarity
 
 No model training or fine-tuning is performed
 
@@ -115,7 +123,6 @@ Focus is on learning real-world agent workflows
 ## Author
 
 - Adarsh Jha
-- B.Tech Student at IIT Jammu
+- B.Tech Student, IIT Jammu
 - Interested in Generative AI and Backend Development
-
 
