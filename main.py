@@ -1,8 +1,30 @@
+import os
+from dotenv import load_dotenv
 from langchain_core.messages import HumanMessage
+from langchain_groq import ChatGroq  # New import
 from graph import build_graph
 
+# 1. Load the API key from your .env file
+load_dotenv()
 
 def main():
+    # Verify Groq API key is loaded
+    if not os.getenv("GROQ_API_KEY"):
+        print("Error: GROQ_API_KEY not found. Check your .env file.")
+        return
+
+    # Initialize the Groq Model
+    # llama-3.3-70b-versatile is a great all-rounder
+    llm = ChatGroq(
+        model="llama-3.3-70b-versatile",
+        temperature=0,
+        groq_api_key=os.getenv("GROQ_API_KEY")
+    )
+
+    print("AutoStream Agent (Groq Edition) - type 'exit' to quit")
+    
+    # ... rest of your main logic (build_graph, app.invoke, etc)
+
     app = build_graph()
 
     state = {
@@ -29,7 +51,9 @@ def main():
             if state["lead_data"]["name"] is None:
                 state["lead_data"]["name"] = user_input
             elif state["lead_data"]["email"] is None:
-                state["lead_data"]["email"] = user_input
+                # Validation check: Only save if it looks like an email
+                if "@" in user_input and "." in user_input:
+                    state["lead_data"]["email"] = user_input
             elif state["lead_data"]["platform"] is None:
                 state["lead_data"]["platform"] = user_input
 

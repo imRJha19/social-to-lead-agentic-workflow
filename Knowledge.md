@@ -18,3 +18,6 @@
 ## Company Policies
 - No refunds available after 7 days of purchase
 - 24/7 customer support is available only for Pro plan users
+
+## How to Get Started
+- To sign up for a plan, simply tell me "I want the Pro plan" or "I choose the Basic plan" and I will help you with the registration.
