@@ -18,6 +18,7 @@ def rag_answer(state: dict) -> dict:
     )
 
     # 3. Combine instructions + knowledge + user question
+    #updating the logic of the Rag.py to handle unwanted error 
     messages = [
         SystemMessage(content=(
             "You are a concise AutoStream salesman. "
